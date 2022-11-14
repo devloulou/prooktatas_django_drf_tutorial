@@ -31,3 +31,22 @@ class SubCategoryModel(AddDefaultDateColsMixin):
 
     def __str__(self):
         return self.sub_category_name
+
+
+class ProductModel(AddDefaultDateColsMixin):
+    product_name = models.CharField(null=False, blank=False, max_length=60)
+    price_gross = models.IntegerField(null=False, blank=False)
+    price_net = models.IntegerField(null=True, blank=True)
+    sub_category = models.ForeignKey(SubCategoryModel, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = "products"
+
+    def __str__(self):
+        return self.product_name
+
+    def save(self, *args, **kwargs):
+        if not self.price_net:
+            self.price_net = self.price_gross * 0.73
+
+        super(ProductModel, self).save(*args, **kwargs)

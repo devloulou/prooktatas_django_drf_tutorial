@@ -1,12 +1,18 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import GroupCategoryModel, SubCategoryModel
-from .serializers import GroupCategoryModelSerializer, SubCategoryModelSerializer
+from .models import (GroupCategoryModel,
+                    SubCategoryModel,
+                    ProductModel)
+from .serializers import (GroupCategoryModelSerializer,
+                          SubCategoryModelSerializer,
+                          ProductModelSerializer)
 from rest_framework.views import APIView
+from rest_framework import viewsets
 
 @api_view(['GET'])
 def test_view(request):
+    
     return Response(
         data={"result": "ok"},
         status=status.HTTP_200_OK)
@@ -47,3 +53,10 @@ class SubCategoryView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# viewset
+
+class ProductViewset(viewsets.ModelViewSet):
+    queryset = ProductModel.objects.all()
+    serializer_class = ProductModelSerializer
